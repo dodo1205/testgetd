@@ -6,16 +6,17 @@
     <title>Gestdown Subtitles - Configuration</title>
     <link rel="stylesheet" href="assets/styles.css">
     <link rel="icon" type="image/png" href="https://gestdown.info/assets/images/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 </head>
 <body>
-    <div class="container">
+    <div class="container animate__animated animate__fadeIn">
         <header>
-            <img src="https://gestdown.info/assets/images/logo.png" alt="Gestdown Logo" class="logo">
+            <img src="https://gestdown.info/assets/images/logo.png" alt="Gestdown Logo" class="logo animate__animated animate__bounceIn">
             <h1>Gestdown Subtitles par Dydhzo</h1>
             <p>Configurez votre addon pour obtenir des sous-titres depuis Gestdown.info</p>
         </header>
         <main>
-            <section class="config-section">
+            <section class="config-section animate__animated animate__slideInLeft">
                 <h2>Paramètres de Langue</h2>
                 <div class="form-group">
                     <label for="language">Langue Préférée pour les Sous-titres :</label>
@@ -99,9 +100,12 @@
                         <option value="yoruba">Yoruba (yor)</option>
                     </select>
                 </div>
-                <button id="saveConfig">Sauvegarder la Configuration</button>
+                <div class="button-group">
+                    <button id="saveConfig">Sauvegarder la Configuration</button>
+                    <button id="installAddon">Installer l'Addon</button>
+                </div>
             </section>
-            <section class="info-section">
+            <section class="info-section animate__animated animate__slideInRight">
                 <h2>À Propos</h2>
                 <p>Créé par Dydhzo. Cet addon permet de récupérer des sous-titres pour vos séries préférées depuis Gestdown.info.</p>
                 <p>Version : 1.0.0</p>
