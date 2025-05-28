@@ -65,10 +65,11 @@ async function subtitles(type, imdbid, lang) {
             for (let i = 0; i < subtitlesList.length; i++) {
                 let subInfo = subtitlesList[i];
                 let url = `https://api.gestdown.info/subtitles/download/${subInfo.id}`;
+                const proxyBaseUrl = process.env.PROXY_BASE_URL || 'http://127.0.0.1:11470';
                 subs.push({
                     lang: languages[lang].iso || languages[lang].id || lang,
                     id: `${cachID}_${i}`,
-                    url: `http://127.0.0.1:11470/subtitles.vtt?from=${encodeURIComponent(url)}`,
+                    url: `${proxyBaseUrl}/subtitles.vtt?from=${encodeURIComponent(url)}`,
                 });
             }
             console.log(`Sous-titres formatés pour Stremio:`, subs);

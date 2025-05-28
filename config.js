@@ -7,9 +7,10 @@ var config = {
 
 switch (env) {
     case 'beamup':
-		config.port = process.env.PORT
-		      config.local = "https://2ecbbd610840-gestdown.baby-beamup.club"
-		      break;
+  config.port = process.env.PORT || 3300;
+        config.local = process.env.LOCAL_URL || "https://your-custom-domain.com";
+        console.log(`Mode beamup activé. URL locale: ${config.local}, Port: ${config.port}`);
+        break;
 
     case 'local':
 		config.port = 63358

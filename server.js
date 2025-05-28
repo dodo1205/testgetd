@@ -9,4 +9,15 @@ app.listen((config.port), function () {
     console.log(`HTTP addon accessible at: ${config.local}/configure`);
 });
 
-publishToCentral("https://2ecbbd610840-subscene.baby-beamup.club/manifest.json")
+// Publication sur le répertoire central de Stremio (optionnel, configuré via une variable d'environnement)
+if (process.env.PUBLISH_URL) {
+    publishToCentral(process.env.PUBLISH_URL)
+        .then(() => {
+            console.log(`Publication réussie sur le répertoire central de Stremio à l'adresse: ${process.env.PUBLISH_URL}`);
+        })
+        .catch(error => {
+            console.error("Erreur lors de la publication sur le répertoire central de Stremio:", error);
+        });
+} else {
+    console.log("Publication sur le répertoire central de Stremio désactivée. Définissez PUBLISH_URL dans l'environnement pour activer.");
+}
