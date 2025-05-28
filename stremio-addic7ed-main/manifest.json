@@ -1,0 +1,27 @@
+{
+    "id": "org.gestdown.subtitles",
+    "version": "1.0.0",
+    "name": "Gestdown Subtitles",
+    "description": "Provides subtitles from Gestdown.info",
+    "logo": "https://gestdown.info/assets/images/logo.png",
+    "background": "https://github.com/Stremio/stremio-art/raw/main/originals/Leonardo-Hernandes.png",
+    "contactEmail": "ahmidiyasser@gmail.com",
+    "catalogs": [],
+    "resources": [{
+            "name": "subtitles",
+            "types": [
+                "series"
+            ],
+            "idPrefixes": [
+                "tt"
+            ]
+        }
+    ],
+    "types": [
+            "subtitles"
+    ],
+    "behaviorHints": {
+        "configurable": true,
+        "configurationRequired": true
+    }
+}
