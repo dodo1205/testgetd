@@ -3,8 +3,8 @@
     "version": "1.0.0",
     "name": "gestdown-addon",
     "description": "Provides subtitles from gestdown",
-    "logo": "https://www.gestdown.info/img/Gestdown-logos.jpeg",
-    "background": "https://www.gestdown.info/img/background.webp",
+    "logo": "https://github.com/dodo1205/testgetd/blob/main/public/gestdown-logos.png",
+    "background": "https://github.com/dodo1205/testgetd/blob/main/public/gestdown-background.png",
     "contactEmail": "",
     "catalogs": [],
     "resources": [{
