@@ -46,7 +46,7 @@ app.get('/:configuration?/manifest.json', (_, res) => {
 
 app.get('/:configuration?/:resource/:type/:id/:extra?.json', (req, res) => {
     res.setHeader('Cache-Control', 'max-age=86400,staleRevalidate=stale-while-revalidate, staleError=stale-if-error, public');
-    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
 
     console.log('Requête reçue:', req.params);
     const { configuration, resource, type, id } = req.params;
