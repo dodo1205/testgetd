@@ -13,7 +13,7 @@ switch (env) {
         break;
     case 'production':
         config.port = process.env.PORT || 3951;
-        config.local = process.env.HOST_NAME;
+        config.local = process.env.CONFIG_URL;
         console.log(`Mode production activé. URL de configuration: ${config.local}, Port: ${config.port}`);
         break;
 }
