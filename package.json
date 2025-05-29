@@ -1,7 +1,7 @@
 {
-	"name": "stremio-gestdown-dydhzo",
+	"name": "stremio-gestdown",
 	"version": "1.0.0",
-	"description": "Gestdown subtitles for Stremio by Dydhzo",
+	"description": "Gestdown subtitles for Stremio",
 	"scripts": {
 		"postinstall": "sh ./postinstall.sh",
 		"start": "node server.js",

@@ -1,10 +1,11 @@
 {
-    "id": "org.gestdown.subtitles",
+    "id": "org.dydhzo.subtitles",
     "version": "1.0.0",
-    "name": "Gestdown Subtitles by Dydhzo",
-    "description": "Provides subtitles from Gestdown.info. Created by Dydhzo.",
-    "logo": "https://gestdown.info/assets/images/logo.png",
+    "name": "Dydhzo Subtitles",
+    "description": "Provides subtitles curated by Dydhzo",
+    "logo": "",
     "background": "https://github.com/Stremio/stremio-art/raw/main/originals/Leonardo-Hernandes.png",
+    "contactEmail": "",
     "catalogs": [],
     "resources": [{
             "name": "subtitles",
