@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Handle Install Addon button
     installButton.addEventListener('click', function() {
         // Generate Stremio addon install link based on the current host and selected language
-        const host = window.location.host; // e.g., 127.0.0.1:63358 (without protocol)
+        const host = window.location.host; // e.g., 127.0.0.1:64395 (without protocol)
         const language = document.getElementById('language').value;
         const stremioLink = `stremio://${host}/${language}/manifest.json`;
         const httpLink = `${window.location.protocol}//${host}/${language}/manifest.json`;

@@ -20,13 +20,13 @@ async function request(url, header) {
 
 }
 async function getMeta(type, id) {
-    if (!process.env.API_KEY) {
-        console.error("Erreur: La clé API TMDB n'est pas définie. Définissez API_KEY dans votre environnement.");
+    if (!process.env.TMDB_API) {
+        console.error("Erreur: La clé API TMDB n'est pas définie. Définissez TMDB_API dans votre environnement.");
         return { title: id, slug: id }; // Retourner une valeur par défaut pour éviter les erreurs en aval
     }
 
     if (type == "movie") {
-        let url = `${BaseURL}/movie/${id}?api_key=${process.env.API_KEY}`;
+        let url = `${BaseURL}/movie/${id}?api_key=${process.env.TMDB_API}`;
         let res = await request(url);
         if (!res || !res.data) {
             console.error(`Aucune donnée reçue de TMDB pour le film ID: ${id}`);
@@ -40,7 +40,7 @@ async function getMeta(type, id) {
         var slug = slugify(title, { replacement: '-', remove: undefined, lower: true, strict: true, trim: true });
         return { title: title, slug: slug };
     } else if (type == "series") {
-        let url = `${BaseURL}/find/${id}?api_key=${process.env.API_KEY}&external_source=imdb_id`;
+        let url = `${BaseURL}/find/${id}?api_key=${process.env.TMDB_API}&external_source=imdb_id`;
         let res = await request(url);
         if (!res || !res.data || !res.data.tv_results || res.data.tv_results.length === 0) {
             console.error(`Aucune donnée ou série trouvée sur TMDB pour ID: ${id}`);
