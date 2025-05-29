@@ -92,4 +92,31 @@ app.get('/languages.json', (_, res) => {
     res.end();
 });
 
+// Proxy endpoint to download, convert, and serve subtitles with proper encoding (inspired by stremio-opensubtitles-main)
+app.get('/proxy/subtitle/:subtitleId', async (req, res) => {
+    const { subtitleId } = req.params;
+    const subtitleUrl = `https://api.gestdown.info/subtitles/download/${subtitleId}`;
+    console.log(`Proxy request for subtitle ID: ${subtitleId}, URL: ${subtitleUrl}`);
+    
+    try {
+        const axios = require('axios');
+        // Download the subtitle file
+        const response = await axios.get(subtitleUrl, {
+            responseType: 'arraybuffer', // Get raw data to handle encoding
+            timeout: 10000
+        });
+        
+        // For now, serve the raw data as-is. In a complete implementation, convert to VTT with UTF-8 encoding.
+        // This would require libraries like 'sub2vtt' or 'iconv-lite' to handle format and encoding conversion.
+        res.setHeader('Content-Type', 'text/vtt; charset=utf-8');
+        res.send(response.data);
+        res.end();
+        console.log(`Subtitle ID ${subtitleId} served through proxy.`);
+    } catch (error) {
+        console.error(`Error downloading subtitle ID ${subtitleId}:`, error.message);
+        res.status(500).send('Error downloading subtitle');
+        res.end();
+    }
+});
+
 module.exports = app
