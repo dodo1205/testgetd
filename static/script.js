@@ -129,17 +129,39 @@ document.addEventListener('DOMContentLoaded', function() {
     // Handle Install Addon button
     installButton.addEventListener('click', function() {
         // Generate Stremio addon install link based on the current host and selected language
-        const host = window.location.origin; // e.g., http://127.0.0.1:63358
+        const host = window.location.host; // e.g., 127.0.0.1:63358 (without protocol)
         const language = document.getElementById('language').value;
-        const installLink = `stremio://${host}/${language}/manifest.json`;
-        console.log('Generating install link:', installLink);
+        const stremioLink = `stremio://${host}/${language}/manifest.json`;
+        const httpLink = `${window.location.protocol}//${host}/${language}/manifest.json`;
+        console.log('Generating install links:', { stremioLink, httpLink });
         
-        // Attempt to open the link in Stremio
-        window.location.href = installLink;
+        // Show the install options
+        const installOptions = document.getElementById('installOptions');
+        installOptions.style.display = 'block';
+        messageDiv.style.display = 'none'; // Hide any previous message
         
-        // Display a message to the user
-        messageDiv.textContent = 'Opening Stremio to install the addon with the selected language. If Stremio does not open, ensure it is installed.';
-        messageDiv.className = 'message success';
-        messageDiv.style.display = 'block';
+        // Handle Open in Stremio
+        document.getElementById('openStremio').onclick = function() {
+            window.location.href = stremioLink;
+            messageDiv.textContent = 'Opening Stremio to install the addon. If Stremio does not open, ensure it is installed.';
+            messageDiv.className = 'message success';
+            messageDiv.style.display = 'block';
+            installOptions.style.display = 'none';
+        };
+        
+        // Handle Copy Link
+        document.getElementById('copyLink').onclick = function() {
+            navigator.clipboard.writeText(httpLink).then(() => {
+                document.getElementById('copyMessage').style.display = 'block';
+                messageDiv.textContent = 'Link copied to clipboard! Paste it into Stremio\'s "Add Addon" feature.';
+                messageDiv.className = 'message success';
+                messageDiv.style.display = 'block';
+            }, () => {
+                messageDiv.textContent = 'Failed to copy link. Please manually copy it from the console or refresh the page.';
+                messageDiv.className = 'message error';
+                messageDiv.style.display = 'block';
+            });
+            installOptions.style.display = 'none';
+        };
     });
 });

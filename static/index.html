@@ -37,6 +37,14 @@
         <section class="install-section">
             <h2><i class="fas fa-download"></i> Install Addon</h2>
             <button id="installButton" class="btn install-btn"><i class="fas fa-rocket"></i> Install to Stremio</button>
+            <div id="installOptions" class="message" style="display: none;">
+                <p>Choose an option to install the addon:</p>
+                <div class="option-buttons">
+                    <button id="openStremio" class="btn primary-btn"><i class="fas fa-play"></i> Open in Stremio</button>
+                    <button id="copyLink" class="btn primary-btn"><i class="fas fa-copy"></i> Copy Link</button>
+                </div>
+                <p id="copyMessage" style="display: none; margin-top: 10px;">Link copied to clipboard!</p>
+            </div>
         </section>
 
         <footer class="footer">
