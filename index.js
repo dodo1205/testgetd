@@ -84,4 +84,12 @@ app.get('/:configuration?/:resource/:type/:id/:extra?.json', (req, res) => {
     }
 });
 
+// Endpoint to serve languages.json for the frontend
+app.get('/languages.json', (_, res) => {
+    res.setHeader('Cache-Control', 'max-age=86400,staleRevalidate=stale-while-revalidate, staleError=stale-if-error, public');
+    res.setHeader('Content-Type', 'application/json');
+    res.send(languages);
+    res.end();
+});
+
 module.exports = app
