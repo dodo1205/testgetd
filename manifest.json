@@ -2,7 +2,7 @@
     "id": "community.gestdown",
     "version": "1.0.0",
     "name": "gestdown-addon",
-    "description": "Provides subtitles from www.gestdown.info",
+    "description": "Provides subtitles from gestdown",
     "logo": "https://www.gestdown.info/img/Gestdown-logos.jpeg",
     "background": "https://www.gestdown.info/img/background.webp",
     "contactEmail": "",
