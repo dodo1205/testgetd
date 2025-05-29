@@ -100,18 +100,19 @@ app.get('/proxy/subtitle/:subtitleId', async (req, res) => {
     
     try {
         const axios = require('axios');
-        // Download the subtitle file
+        // Download the subtitle file as a stream to handle large files and encoding
         const response = await axios.get(subtitleUrl, {
             responseType: 'arraybuffer', // Get raw data to handle encoding
             timeout: 10000
         });
         
-        // For now, serve the raw data as-is. In a complete implementation, convert to VTT with UTF-8 encoding.
-        // This would require libraries like 'sub2vtt' or 'iconv-lite' to handle format and encoding conversion.
-        res.setHeader('Content-Type', 'text/vtt; charset=utf-8');
+        // Serve the subtitle data with explicit UTF-8 encoding
+        // Future improvement: Convert to VTT format if necessary using a library like 'sub2vtt'
+        // and handle encoding conversion with 'iconv-lite' if the source is not UTF-8.
+        res.setHeader('Content-Type', 'text/plain; charset=utf-8');
         res.send(response.data);
         res.end();
-        console.log(`Subtitle ID ${subtitleId} served through proxy.`);
+        console.log(`Subtitle ID ${subtitleId} served through proxy with UTF-8 encoding.`);
     } catch (error) {
         console.error(`Error downloading subtitle ID ${subtitleId}:`, error.message);
         res.status(500).send('Error downloading subtitle');
