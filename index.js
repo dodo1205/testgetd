@@ -46,7 +46,7 @@ app.get('/:configuration?/manifest.json', (_, res) => {
 
 app.get('/:configuration?/:resource/:type/:id/:extra?.json', (req, res) => {
     res.setHeader('Cache-Control', 'max-age=86400,staleRevalidate=stale-while-revalidate, staleError=stale-if-error, public');
-    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.setHeader('Content-Type', 'application/json');
 
     console.log('Requête reçue:', req.params);
     const { configuration, resource, type, id } = req.params;
@@ -90,34 +90,6 @@ app.get('/languages.json', (_, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.send(languages);
     res.end();
-});
-
-// Proxy endpoint to download, convert, and serve subtitles with proper encoding (inspired by stremio-opensubtitles-main)
-app.get('/proxy/subtitle/:subtitleId', async (req, res) => {
-    const { subtitleId } = req.params;
-    const subtitleUrl = `https://api.gestdown.info/subtitles/download/${subtitleId}`;
-    console.log(`Proxy request for subtitle ID: ${subtitleId}, URL: ${subtitleUrl}`);
-    
-    try {
-        const axios = require('axios');
-        // Download the subtitle file as a stream to handle large files and encoding
-        const response = await axios.get(subtitleUrl, {
-            responseType: 'arraybuffer', // Get raw data to handle encoding
-            timeout: 10000
-        });
-        
-        // Serve the subtitle data with explicit UTF-8 encoding
-        // Future improvement: Convert to VTT format if necessary using a library like 'sub2vtt'
-        // and handle encoding conversion with 'iconv-lite' if the source is not UTF-8.
-        res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-        res.send(response.data);
-        res.end();
-        console.log(`Subtitle ID ${subtitleId} served through proxy with UTF-8 encoding.`);
-    } catch (error) {
-        console.error(`Error downloading subtitle ID ${subtitleId}:`, error.message);
-        res.status(500).send('Error downloading subtitle');
-        res.end();
-    }
 });
 
 module.exports = app

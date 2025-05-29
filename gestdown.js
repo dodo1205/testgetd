@@ -64,12 +64,11 @@ async function subtitles(type, imdbid, lang) {
         if (subtitlesList.length > 0) {
             for (let i = 0; i < subtitlesList.length; i++) {
                 let subInfo = subtitlesList[i];
-                let originalUrl = `https://api.gestdown.info/subtitles/download/${subInfo.subtitleId}`;
-                let localUrl = `${config.local}/proxy/subtitle/${subInfo.subtitleId}`;
+                let url = `https://api.gestdown.info/subtitles/download/${subInfo.subtitleId}`;
                 subs.push({
                     lang: languages[lang].iso || languages[lang].id || lang,
                     id: `${cachID}_${i}`,
-                    url: localUrl
+                    url: url,
                 });
             }
             console.log(`Sous-titres formatés pour Stremio:`, subs);
