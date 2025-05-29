@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestdown Addon Configuration</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container fade-in">
+        <header class="header">
+            <img src="https://gestdown.info/assets/images/logo.png" alt="Gestdown Logo" class="logo">
+            <h1>Gestdown Addon for Stremio</h1>
+            <p class="tagline">Ultimate Subtitle Solution</p>
+        </header>
+
+        <section class="description">
+            <h2><i class="fas fa-info-circle"></i> About This Addon</h2>
+            <p>This Stremio addon, powered by Gestdown.info, provides high-quality subtitles for your favorite series. Configure your preferences below and enhance your streaming experience with ease.</p>
+        </section>
+
+        <section class="config-section">
+            <h2><i class="fas fa-cog"></i> Configuration</h2>
+            <form id="configForm">
+                <div class="form-group">
+                    <label for="language"><i class="fas fa-globe"></i> Select Subtitle Language:</label>
+                    <select id="language" name="language" class="custom-select">
+                        <!-- Languages will be populated dynamically by script.js -->
+                    </select>
+                </div>
+                <button type="submit" class="btn primary-btn"><i class="fas fa-save"></i> Save Configuration</button>
+            </form>
+            <div id="message" class="message"></div>
+        </section>
+
+        <section class="install-section">
+            <h2><i class="fas fa-download"></i> Install Addon</h2>
+            <button id="installButton" class="btn install-btn"><i class="fas fa-rocket"></i> Install to Stremio</button>
+        </section>
+
+        <footer class="footer">
+            <p>Coded with <i class="fas fa-heart"></i> by Dydhzo</p>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

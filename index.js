@@ -12,8 +12,8 @@ const serveIndex = require('serve-index');
 
 app.use('/logs', express.static(path.join(__dirname, 'logs'),{etag: false}), serveIndex('logs', {'icons': true,'view':'details '}))
 
-app.use('/configure', express.static(path.join(__dirname, 'vue', 'dist')));
-app.use('/assets', express.static(path.join(__dirname, 'vue', 'dist', 'assets')));
+app.use('/configure', express.static(path.join(__dirname, 'static')));
+app.use('/assets', express.static(path.join(__dirname, 'static')));
 
 app.use(cors())
 
@@ -25,7 +25,7 @@ app.get('/', (_, res) => {
 app.get('/:configuration?/configure', (req, res) => {
 	res.setHeader('Cache-Control', 'max-age=86400,staleRevalidate=stale-while-revalidate, staleError=stale-if-error, public');
 	res.setHeader('content-type', 'text/html');
-	res.sendFile(path.join(__dirname, 'vue', 'dist', 'index.html'));
+	res.sendFile(path.join(__dirname, 'static', 'index.html'));
 });
 
 app.get('/manifest.json', (_, res) => {

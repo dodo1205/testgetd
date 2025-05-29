@@ -1,0 +1,145 @@
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('configForm');
+    const messageDiv = document.getElementById('message');
+    const installButton = document.getElementById('installButton');
+    const languageSelect = document.getElementById('language');
+
+    // List of languages extracted from languages.json
+    const languages = {
+        "arabic": { "id": "arabic", "name": "Arabic", "iso": "ara" },
+        "bengali": { "id": "bengali", "name": "Bengali", "iso": "ben" },
+        "brazillian-portuguese": { "id": "brazillian-portuguese", "name": "Brazillian Portuguese", "iso": null },
+        "chinese-bg-code": { "id": "chinese-bg-code", "name": "Chinese BG code", "iso": null },
+        "czech": { "id": "czech", "name": "Czech", "iso": "ces" },
+        "danish": { "id": "danish", "name": "Danish", "iso": "dan" },
+        "dutch": { "id": "dutch", "name": "Dutch", "iso": "nld" },
+        "english": { "id": "english", "name": "English", "iso": "eng" },
+        "farsi_persian": { "id": "farsi_persian", "name": "Farsi/Persian", "iso": "fas" },
+        "finnish": { "id": "finnish", "name": "Finnish", "iso": "fin" },
+        "french": { "id": "french", "name": "French", "iso": "fra" },
+        "german": { "id": "german", "name": "German", "iso": "deu" },
+        "greek": { "id": "greek", "name": "Greek", "iso": "grc" },
+        "hebrew": { "id": "hebrew", "name": "Hebrew", "iso": "heb" },
+        "indonesian": { "id": "indonesian", "name": "Indonesian", "iso": "ind" },
+        "italian": { "id": "italian", "name": "Italian", "iso": "ita" },
+        "korean": { "id": "korean", "name": "Korean", "iso": "kor" },
+        "malay": { "id": "malay", "name": "Malay", "iso": "msa" },
+        "norwegian": { "id": "norwegian", "name": "Norwegian", "iso": "nor" },
+        "polish": { "id": "polish", "name": "Polish", "iso": "pol" },
+        "portuguese": { "id": "portuguese", "name": "Portuguese", "iso": "por" },
+        "romanian": { "id": "romanian", "name": "Romanian", "iso": "ron" },
+        "spanish": { "id": "spanish", "name": "Spanish", "iso": "spa" },
+        "swedish": { "id": "swedish", "name": "Swedish", "iso": "swe" },
+        "thai": { "id": "thai", "name": "Thai", "iso": "tha" },
+        "turkish": { "id": "turkish", "name": "Turkish", "iso": "tur" },
+        "vietnamese": { "id": "vietnamese", "name": "Vietnamese", "iso": "vie" },
+        "albanian": { "id": "albanian", "name": "Albanian", "iso": "sqi" },
+        "armenian": { "id": "armenian", "name": "Armenian", "iso": "hye" },
+        "azerbaijani": { "id": "azerbaijani", "name": "Azerbaijani", "iso": "aze" },
+        "basque": { "id": "basque", "name": "Basque", "iso": "eus" },
+        "belarusian": { "id": "belarusian", "name": "Belarusian", "iso": "bel" },
+        "big_5_code": { "id": "big_5_code", "name": "Big 5 code", "iso": null },
+        "bosnian": { "id": "bosnian", "name": "Bosnian", "iso": "bos" },
+        "bulgarian": { "id": "bulgarian", "name": "Bulgarian", "iso": "bul" },
+        "bulgarian-english": { "id": "bulgarian-english", "name": "Bulgarian/ English", "iso": null },
+        "burmese": { "id": "burmese", "name": "Burmese", "iso": "mya" },
+        "cambodian/khmer": { "id": "cambodian/khmer", "name": "Cambodian/Khmer", "iso": "khm" },
+        "catalan": { "id": "catalan", "name": "Catalan", "iso": "cat" },
+        "croatian": { "id": "croatian", "name": "Croatian", "iso": "hrv" },
+        "dutch-english": { "id": "dutch-english", "name": "Dutch/ English", "iso": null },
+        "english-german": { "id": "english-german", "name": "English/ German", "iso": null },
+        "esperanto": { "id": "esperanto", "name": "Esperanto", "iso": "epo" },
+        "estonian": { "id": "estonian", "name": "Estonian", "iso": "est" },
+        "georgian": { "id": "georgian", "name": "Georgian", "iso": "kat" },
+        "greenlandic": { "id": "greenlandic", "name": "Greenlandic", "iso": "kal" },
+        "hindi": { "id": "hindi", "name": "Hindi", "iso": "hin" },
+        "hungarian": { "id": "hungarian", "name": "Hungarian", "iso": "hun" },
+        "hungarian-english": { "id": "hungarian-english", "name": "Hungarian/ English", "iso": null },
+        "icelandic": { "id": "icelandic", "name": "Icelandic", "iso": "isl" },
+        "japanese": { "id": "japanese", "name": "Japanese", "iso": "jpn" },
+        "kannada": { "id": "kannada", "name": "Kannada", "iso": "kan" },
+        "kinyarwanda": { "id": "kinyarwanda", "name": "Kinyarwanda", "iso": "kin" },
+        "kurdish": { "id": "kurdish", "name": "Kurdish", "iso": "kur" },
+        "latvian": { "id": "latvian", "name": "Latvian", "iso": "lav" },
+        "lithuanian": { "id": "lithuanian", "name": "Lithuanian", "iso": "lit" },
+        "macedonian": { "id": "macedonian", "name": "Macedonian", "iso": "mkd" },
+        "malayalam": { "id": "malayalam", "name": "Malayalam", "iso": "mal" },
+        "manipuri": { "id": "manipuri", "name": "Manipuri", "iso": "mni" },
+        "mongolian": { "id": "mongolian", "name": "Mongolian", "iso": "mon" },
+        "nepali": { "id": "nepali", "name": "Nepali", "iso": "nep" },
+        "pashto": { "id": "pashto", "name": "Pashto", "iso": "pus" },
+        "punjabi": { "id": "punjabi", "name": "Punjabi", "iso": "pan" },
+        "russian": { "id": "russian", "name": "Russian", "iso": "rus" },
+        "serbian": { "id": "serbian", "name": "Serbian", "iso": "srp" },
+        "sinhala": { "id": "sinhala", "name": "Sinhala", "iso": "sin" },
+        "slovak": { "id": "slovak", "name": "Slovak", "iso": "slk" },
+        "slovenian": { "id": "slovenian", "name": "Slovenian", "iso": "slv" },
+        "somali": { "id": "somali", "name": "Somali", "iso": "som" },
+        "sundanese": { "id": "sundanese", "name": "Sundanese", "iso": "sun" },
+        "swahili": { "id": "swahili", "name": "Swahili", "iso": "swa" },
+        "tagalog": { "id": "tagalog", "name": "Tagalog", "iso": "tgl" },
+        "tamil": { "id": "tamil", "name": "Tamil", "iso": "tam" },
+        "telugu": { "id": "telugu", "name": "Telugu", "iso": "tel" },
+        "ukrainian": { "id": "ukrainian", "name": "Ukrainian", "iso": "ukr" },
+        "urdu": { "id": "urdu", "name": "Urdu", "iso": "urd" },
+        "yoruba": { "id": "yoruba", "name": "Yoruba", "iso": "yor" }
+    };
+
+    // Populate the language dropdown
+    function populateLanguages() {
+        Object.keys(languages).forEach(langKey => {
+            const lang = languages[langKey];
+            const option = document.createElement('option');
+            option.value = lang.id;
+            option.textContent = lang.name;
+            languageSelect.appendChild(option);
+        });
+        // Set default language to French
+        languageSelect.value = 'french';
+    }
+
+    populateLanguages();
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const language = document.getElementById('language').value;
+        
+        // Simulate saving configuration by sending a request to the backend
+        // In a real scenario, this would interact with an API endpoint
+        try {
+            // For demonstration, we'll just show a success message
+            // Replace this with actual API call to save configuration
+            console.log('Saving configuration for language:', language);
+            
+            // Display success message
+            messageDiv.textContent = `Configuration saved successfully for language: ${languages[language].name}`;
+            messageDiv.className = 'message success';
+            messageDiv.style.display = 'block';
+            
+            // Here you would send the configuration to the backend
+            // Example: fetch('/saveConfig', { method: 'POST', body: JSON.stringify({ language }) })
+        } catch (error) {
+            console.error('Error saving configuration:', error);
+            messageDiv.textContent = 'Error saving configuration. Please try again.';
+            messageDiv.className = 'message error';
+            messageDiv.style.display = 'block';
+        }
+    });
+
+    // Handle Install Addon button
+    installButton.addEventListener('click', function() {
+        // Generate Stremio addon install link based on the current host and selected language
+        const host = window.location.origin; // e.g., http://127.0.0.1:63358
+        const language = document.getElementById('language').value;
+        const installLink = `stremio://${host}/${language}/manifest.json`;
+        console.log('Generating install link:', installLink);
+        
+        // Attempt to open the link in Stremio
+        window.location.href = installLink;
+        
+        // Display a message to the user
+        messageDiv.textContent = 'Opening Stremio to install the addon with the selected language. If Stremio does not open, ensure it is installed.';
+        messageDiv.className = 'message success';
+        messageDiv.style.display = 'block';
+    });
+});

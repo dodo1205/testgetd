@@ -1,11 +1,11 @@
 {
     "id": "org.gestdown.subtitles",
     "version": "1.0.0",
-    "name": "Gestdown Subtitles",
+    "name": "gestdown-addon",
     "description": "Provides subtitles from Gestdown.info",
     "logo": "https://gestdown.info/assets/images/logo.png",
     "background": "https://github.com/Stremio/stremio-art/raw/main/originals/Leonardo-Hernandes.png",
-    "contactEmail": "ahmidiyasser@gmail.com",
+    "contactEmail": "",
     "catalogs": [],
     "resources": [{
             "name": "subtitles",
