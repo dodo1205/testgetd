@@ -64,7 +64,13 @@ app.get('/:configuration?/:resource/:type/:id/:extra?.json', (req, res) => {
             subtitles(type, id, lang)
                 .then(subs => {
                     console.log(`Sous-titres retournés pour ${id}: ${subs.length} résultats`);
-                    res.send(JSON.stringify({ subtitles: subs }));
+                    // Dynamically adjust subtitle URLs to use the correct base URL from the request
+                    const baseUrl = `${req.protocol}://${req.get('host')}`;
+                    const adjustedSubs = subs.map(sub => ({
+                        ...sub,
+                        url: sub.url.startsWith('/') ? `${baseUrl}${sub.url}` : sub.url
+                    }));
+                    res.send(JSON.stringify({ subtitles: adjustedSubs }));
                     res.end();
                 })
                 .catch(error => {
