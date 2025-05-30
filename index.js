@@ -123,4 +123,10 @@ app.get('/languages.json', (_, res) => {
     res.end();
 });
 
+// Catch-all route for debugging incoming requests
+app.get('*', (req, res) => {
+    console.log('Requête catch-all reçue pour:', req.originalUrl, 'avec query:', req.query);
+    res.status(404).send('Page not found');
+});
+
 module.exports = app
