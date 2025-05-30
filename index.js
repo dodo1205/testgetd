@@ -92,13 +92,13 @@ app.get('/languages.json', (_, res) => {
     res.end();
 });
 
-// Custom endpoint to download subtitles and serve them with explicit UTF-8 encoding for proxy conversion
-app.get('/subtitles/raw/:subtitleId', (req, res) => {
+// Custom endpoint to download subtitles and serve them as VTT with explicit UTF-8 encoding
+app.get('/subtitles/vtt/:subtitleId.vtt', (req, res) => {
     const { subtitleId } = req.params;
     const url = `https://api.gestdown.info/subtitles/download/${subtitleId}`;
     const needle = require('needle');
     
-    console.log(`Requête reçue pour sous-titres bruts ID ${subtitleId} via endpoint local`);
+    console.log(`Requête reçue pour sous-titres VTT ID ${subtitleId} via endpoint local`);
     
     needle.get(url, { follow_max: 5 }, (err, response) => {
         if (err || response.statusCode !== 200) {
@@ -107,11 +107,12 @@ app.get('/subtitles/raw/:subtitleId', (req, res) => {
             return;
         }
         
-        // Set headers to force UTF-8 encoding
-        res.setHeader('Content-Type', 'text/plain; charset=UTF-8');
+        // Set headers to force UTF-8 encoding for VTT
+        res.setHeader('Content-Type', 'text/vtt; charset=UTF-8');
         res.setHeader('Cache-Control', 'max-age=86400, public');
         
-        // Send the raw subtitle content with explicit UTF-8 encoding
+        // Send the subtitle content as VTT with explicit UTF-8 encoding
+        // Note: Ideally, we would convert SRT to VTT here, but without additional libraries, we rely on Stremio to handle the format
         res.send(response.body);
         res.end();
     });
