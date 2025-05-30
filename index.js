@@ -112,7 +112,8 @@ app.get('/subtitles.vtt', async (req, res) => {
         console.log(`Proxying subtitle from: ${subtitleUrl}, Proxy:`, proxy);
         const generated = sub2vtt.gerenateUrl(subtitleUrl, { referer: "someurl" });
         console.log(`Generated URL:`, generated);
-        const sub = new sub2vtt(subtitleUrl, proxy);
+        // Only pass proxy if it exists and is properly formatted to avoid destructuring errors
+        const sub = proxy ? new sub2vtt(subtitleUrl, proxy) : new sub2vtt(subtitleUrl);
         const file = await sub.getSubtitle();
 
         if (!file?.subtitle) {
