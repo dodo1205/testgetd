@@ -95,33 +95,26 @@ app.get('/languages.json', (_, res) => {
 });
 
 // Custom endpoint to proxy and convert subtitles to VTT using sub2vtt, mirroring stremio-opensubtitles-main approach
-app.get('/sub.vtt', async (req, res) => {
+app.get('/subtitles.vtt', async (req, res) => {
     try {
         res.setHeader('Cache-Control', 'max-age=86400,staleRevalidate=stale-while-revalidate, staleError=stale-if-error, public');
-        let url, proxyConfig;
-        if (req?.query?.from) {
-            url = req.query.from;
-        } else {
-            res.status(400).send('Missing subtitle URL');
+        const { from, proxy } = req.query;
+        if (!from) {
+            res.status(400).send('Missing "from" parameter');
             return;
-        }
-        if (req?.query?.proxy) {
-            proxyConfig = JSON.parse(Buffer.from(req.query.proxy, 'base64').toString('utf8'));
         }
 
-        // Utiliser sub2vtt pour convertir les sous-titres en VTT
-        let sub = new sub2vtt(url, proxyConfig ? { proxy: proxyConfig } : {});
-        let file = await sub.getSubtitle();
-        if (!file?.subtitle) {
-            console.error('Erreur lors de la conversion des sous-titres avec sub2vtt.');
-            res.status(500).send('Error converting subtitle with sub2vtt');
-            return;
-        }
-        res.setHeader('Content-Type', 'text/vtt; charset=UTF-8');
-        res.send(file.subtitle);
-    } catch (error) {
-        console.error(`Erreur lors du traitement des sous-titres :`, error.message);
-        res.status(500).send('Error fetching or converting subtitle');
+        const proxyConfig = proxy ? JSON.parse(Buffer.from(proxy, 'base64').toString('utf8')) : {};
+        const subRes = await sub2vtt.getSubtitle({
+            url: from,
+            proxy: proxyConfig,
+        });
+
+        res.setHeader('Content-Type', 'text/vtt');
+        res.send(subRes.data);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send(err.message);
     }
 });
 
