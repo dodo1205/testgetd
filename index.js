@@ -64,13 +64,7 @@ app.get('/:configuration?/:resource/:type/:id/:extra?.json', (req, res) => {
             subtitles(type, id, lang)
                 .then(subs => {
                     console.log(`Sous-titres retournés pour ${id}: ${subs.length} résultats`);
-                    // Dynamically adjust subtitle URLs to use the correct base URL from the request
-                    const baseUrl = `${req.protocol}://${req.get('host')}`;
-                    const adjustedSubs = subs.map(sub => ({
-                        ...sub,
-                        url: sub.url.startsWith('/') ? `${baseUrl}${sub.url}` : sub.url
-                    }));
-                    res.send(JSON.stringify({ subtitles: adjustedSubs }));
+                    res.send(JSON.stringify({ subtitles: subs }));
                     res.end();
                 })
                 .catch(error => {
@@ -90,11 +84,19 @@ app.get('/:configuration?/:resource/:type/:id/:extra?.json', (req, res) => {
     }
 });
 
+// Endpoint to serve languages.json for the frontend
+// Endpoint to serve languages.json for the frontend
+app.get('/languages.json', (_, res) => {
+    res.setHeader('Cache-Control', 'max-age=86400,staleRevalidate=stale-while-revalidate, staleError=stale-if-error, public');
+    res.setHeader('Content-Type', 'application/json');
+    res.send(languages);
+    res.end();
+});
+
+// Custom endpoint to proxy and convert subtitles to VTT with proper encoding
 app.get('/subtitles.vtt', async (req, res) => {
-    console.log('Requête reçue pour /subtitles.vtt avec query:', req.query);
     const subtitleUrl = req.query.from;
     if (!subtitleUrl) {
-        console.log('Erreur: URL de sous-titre manquante dans la requête');
         res.status(400).send('Missing subtitle URL');
         return;
     }
@@ -119,20 +121,6 @@ app.get('/subtitles.vtt', async (req, res) => {
         console.error(`Error fetching subtitle from ${subtitleUrl}:`, error.message);
         res.status(500).send('Error fetching subtitle');
     }
-});
-
-// Endpoint to serve languages.json for the frontend
-app.get('/languages.json', (_, res) => {
-    res.setHeader('Cache-Control', 'max-age=86400,staleRevalidate=stale-while-revalidate, staleError=stale-if-error, public');
-    res.setHeader('Content-Type', 'application/json');
-    res.send(languages);
-    res.end();
-});
-
-// Catch-all route for debugging incoming requests
-app.get('*', (req, res) => {
-    console.log('Requête catch-all reçue pour:', req.originalUrl, 'avec query:', req.query);
-    res.status(404).send('Page not found');
 });
 
 module.exports = app
