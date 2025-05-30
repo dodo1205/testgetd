@@ -5,7 +5,7 @@ const path = require('path');
 const subtitles = require('./gestdown');
 const manifest = require("./manifest.json");
 const languages = require('./languages.json');
-const sub2vtt = require('./sub2vtt-main/sub2vtt.js');
+const sub2vtt = require('sub2vtt');
 
 app.set('trust proxy', true)
 
