@@ -66,8 +66,7 @@ async function subtitles(type, imdbid, lang) {
                 let subInfo = subtitlesList[i];
                 let url = `https://api.gestdown.info/subtitles/download/${subInfo.subtitleId}`;
                 // Use a local proxy to convert subtitles to VTT format with proper encoding handling
-                const config = require('./config');
-                let proxyUrl = `${config.local}/subtitles.vtt?from=${encodeURIComponent(url)}`;
+                let proxyUrl = `/subtitles.vtt?from=${encodeURIComponent(url)}`;
                 subs.push({
                     lang: languages[lang].iso || languages[lang].id || lang,
                     id: `${cachID}_${i}`,
