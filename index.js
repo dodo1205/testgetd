@@ -98,7 +98,7 @@ app.get('/languages.json', (_, res) => {
 app.get('/sub.vtt', async (req, res) => {
     try {
         res.setHeader('Cache-Control', 'max-age=86400,staleRevalidate=stale-while-revalidate, staleError=stale-if-error, public');
-        let url, proxy;
+        let url, proxyConfig;
         if (req?.query?.from) {
             url = req.query.from;
         } else {
@@ -106,18 +106,21 @@ app.get('/sub.vtt', async (req, res) => {
             return;
         }
         if (req?.query?.proxy) {
-            proxy = JSON.parse(Buffer.from(req.query.proxy, 'base64').toString());
+            proxyConfig = JSON.parse(Buffer.from(req.query.proxy, 'base64').toString('utf8'));
         }
-        let sub = new sub2vtt(url, proxy ? { proxy: proxy } : {});
+
+        // Utiliser sub2vtt pour convertir les sous-titres en VTT
+        let sub = new sub2vtt(url, proxyConfig ? { proxy: proxyConfig } : {});
         let file = await sub.getSubtitle();
         if (!file?.subtitle) {
-            res.status(500).send('Error converting subtitle');
+            console.error('Erreur lors de la conversion des sous-titres avec sub2vtt.');
+            res.status(500).send('Error converting subtitle with sub2vtt');
             return;
         }
         res.setHeader('Content-Type', 'text/vtt; charset=UTF-8');
         res.send(file.subtitle);
     } catch (error) {
-        console.error(`Error processing subtitle:`, error.message);
+        console.error(`Erreur lors du traitement des sous-titres :`, error.message);
         res.status(500).send('Error fetching or converting subtitle');
     }
 });
