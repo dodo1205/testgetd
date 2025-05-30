@@ -5,6 +5,7 @@ const path = require('path');
 const subtitles = require('./gestdown');
 const manifest = require("./manifest.json");
 const languages = require('./languages.json');
+const sub2vtt = require('sub2vtt');
 
 app.set('trust proxy', true)
 
@@ -93,33 +94,29 @@ app.get('/languages.json', (_, res) => {
     res.end();
 });
 
-// Custom endpoint to proxy and convert subtitles to VTT with proper encoding
+// Custom endpoint to proxy and convert subtitles to VTT using sub2vtt
 app.get('/subtitles.vtt', async (req, res) => {
-    const subtitleUrl = req.query.from;
-    if (!subtitleUrl) {
-        res.status(400).send('Missing subtitle URL');
-        return;
-    }
-
     try {
-        console.log(`Proxying subtitle from: ${subtitleUrl}`);
-        const axios = require('axios');
-        const response = await axios.get(subtitleUrl, { responseType: 'text' });
-        const subtitleContent = response.data;
-
-        // Convert subtitle content to VTT if necessary and handle encoding
-        // Assuming the content might be in SRT format or another format, convert to VTT
-        let vttContent = subtitleContent;
-        if (!subtitleContent.trim().startsWith('WEBVTT')) {
-            // Simple conversion from SRT to VTT if needed
-            vttContent = 'WEBVTT\n\n' + subtitleContent.replace(/(\d+:\d+:\d+),(\d+)/g, '$1.$2');
+        res.setHeader('Cache-Control', 'max-age=86400,staleRevalidate=stale-while-revalidate, staleError=stale-if-error, public');
+        let url;
+        if (req?.query?.from) {
+            url = req.query.from;
+        } else {
+            res.status(400).send('Missing subtitle URL');
+            return;
         }
-
+        console.log(`Proxying subtitle from: ${url}`);
+        let sub = new sub2vtt(url);
+        let file = await sub.getSubtitle();
+        if (!file?.subtitle) {
+            res.status(500).send('Error converting subtitle');
+            return;
+        }
         res.setHeader('Content-Type', 'text/vtt; charset=UTF-8');
-        res.send(vttContent);
+        res.send(file.subtitle);
     } catch (error) {
-        console.error(`Error fetching subtitle from ${subtitleUrl}:`, error.message);
-        res.status(500).send('Error fetching subtitle');
+        console.error(`Error processing subtitle from ${req.query.from}:`, error.message);
+        res.status(500).send('Error fetching or converting subtitle');
     }
 });
 
