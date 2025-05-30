@@ -20,7 +20,7 @@
 		"serve-index": "^1.9.1",
 		"slugify": "^1.6.5",
 		"stremio-addon-sdk": "latest",
-		"sub2vtt": "latest"
+		"sub2vtt": "github:dexter21767/sub2vtt"
 	},
 	"devDependencies": {
 		"nodemon": "latest"
