@@ -84,38 +84,42 @@ app.get('/:configuration?/:resource/:type/:id/:extra?.json', (req, res) => {
     }
 });
 
+// Custom endpoint to proxy and convert subtitles to VTT with proper encoding
+app.get('/subtitles.vtt', async (req, res) => {
+    const subtitleUrl = req.query.from;
+    if (!subtitleUrl) {
+        res.status(400).send('Missing subtitle URL');
+        return;
+    }
+
+    try {
+        console.log(`Proxying subtitle from: ${subtitleUrl}`);
+        const axios = require('axios');
+        const response = await axios.get(subtitleUrl, { responseType: 'text' });
+        const subtitleContent = response.data;
+
+        // Convert subtitle content to VTT if necessary and handle encoding
+        // Assuming the content might be in SRT format or another format, convert to VTT
+        let vttContent = subtitleContent;
+        if (!subtitleContent.trim().startsWith('WEBVTT')) {
+            // Simple conversion from SRT to VTT if needed
+            vttContent = 'WEBVTT\n\n' + subtitleContent.replace(/(\d+:\d+:\d+),(\d+)/g, '$1.$2');
+        }
+
+        res.setHeader('Content-Type', 'text/vtt; charset=UTF-8');
+        res.send(vttContent);
+    } catch (error) {
+        console.error(`Error fetching subtitle from ${subtitleUrl}:`, error.message);
+        res.status(500).send('Error fetching subtitle');
+    }
+});
+
 // Endpoint to serve languages.json for the frontend
 app.get('/languages.json', (_, res) => {
     res.setHeader('Cache-Control', 'max-age=86400,staleRevalidate=stale-while-revalidate, staleError=stale-if-error, public');
     res.setHeader('Content-Type', 'application/json');
     res.send(languages);
     res.end();
-});
-
-// Custom endpoint to download subtitles and serve them as VTT with explicit UTF-8 encoding
-app.get('/subtitles/vtt/:subtitleId.vtt', (req, res) => {
-    const { subtitleId } = req.params;
-    const url = `https://api.gestdown.info/subtitles/download/${subtitleId}`;
-    const needle = require('needle');
-    
-    console.log(`Requête reçue pour sous-titres VTT ID ${subtitleId} via endpoint local`);
-    
-    needle.get(url, { follow_max: 5 }, (err, response) => {
-        if (err || response.statusCode !== 200) {
-            console.error(`Erreur lors du téléchargement des sous-titres pour ID ${subtitleId}:`, err || response.statusCode);
-            res.status(500).send('Erreur lors du téléchargement des sous-titres');
-            return;
-        }
-        
-        // Set headers to force UTF-8 encoding for VTT
-        res.setHeader('Content-Type', 'text/vtt; charset=UTF-8');
-        res.setHeader('Cache-Control', 'max-age=86400, public');
-        
-        // Send the subtitle content as VTT with explicit UTF-8 encoding
-        // Note: Ideally, we would convert SRT to VTT here, but without additional libraries, we rely on Stremio to handle the format
-        res.send(response.body);
-        res.end();
-    });
 });
 
 module.exports = app

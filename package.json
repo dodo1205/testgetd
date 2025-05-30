@@ -3,9 +3,9 @@
 	"version": "1.0.0",
 	"description": "Gestdown subtitles for Stremio",
 	"scripts": {
-		"start": "node server.js",
-		"dev": "nodemon server.js"
-	},
+	"start": "node server.js",
+	"dev": "nodemon server.js"
+},
 	"dependencies": {
 		"axios": "^1.6.2",
 		"cors": "^2.8.5",
@@ -19,8 +19,7 @@
 		"semver": "^7.3.7",
 		"serve-index": "^1.9.1",
 		"slugify": "^1.6.5",
-		"stremio-addon-sdk": "latest",
-		"sub2vtt": "^1.0.9"
+		"stremio-addon-sdk": "latest"
 	},
 	"devDependencies": {
 		"nodemon": "latest"
