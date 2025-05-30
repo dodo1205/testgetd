@@ -65,8 +65,9 @@ async function subtitles(type, imdbid, lang) {
             for (let i = 0; i < subtitlesList.length; i++) {
                 let subInfo = subtitlesList[i];
                 let subtitleId = subInfo.subtitleId;
-                // Use a custom local endpoint to serve subtitles with explicit UTF-8 encoding
-                let proxyUrl = `${config.local}/subtitles/${subtitleId}.vtt`;
+                // Use a custom local endpoint to download raw subtitles with UTF-8 encoding, then pass to proxy for VTT conversion
+                let rawUrl = `${config.local}/subtitles/raw/${subtitleId}`;
+                let proxyUrl = `http://127.0.0.1:11470/subtitles.vtt?from=${encodeURIComponent(rawUrl)}`;
                 subs.push({
                     lang: languages[lang].iso || languages[lang].id || lang,
                     id: `${cachID}_${i}`,

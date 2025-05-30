@@ -92,11 +92,13 @@ app.get('/languages.json', (_, res) => {
     res.end();
 });
 
-// Custom endpoint to serve subtitles with explicit UTF-8 encoding
-app.get('/subtitles/:subtitleId.vtt', (req, res) => {
+// Custom endpoint to download subtitles and serve them with explicit UTF-8 encoding for proxy conversion
+app.get('/subtitles/raw/:subtitleId', (req, res) => {
     const { subtitleId } = req.params;
     const url = `https://api.gestdown.info/subtitles/download/${subtitleId}`;
     const needle = require('needle');
+    
+    console.log(`Requête reçue pour sous-titres bruts ID ${subtitleId} via endpoint local`);
     
     needle.get(url, { follow_max: 5 }, (err, response) => {
         if (err || response.statusCode !== 200) {
@@ -106,12 +108,10 @@ app.get('/subtitles/:subtitleId.vtt', (req, res) => {
         }
         
         // Set headers to force UTF-8 encoding
-        res.setHeader('Content-Type', 'text/vtt; charset=UTF-8');
+        res.setHeader('Content-Type', 'text/plain; charset=UTF-8');
         res.setHeader('Cache-Control', 'max-age=86400, public');
         
-        // Assuming the response is in SRT or another format, we need to convert it to VTT
-        // For simplicity, we pass the raw content and rely on client-side conversion if needed
-        // In a perfect scenario, we'd convert SRT to VTT here, but without additional libraries, we send as-is with correct headers
+        // Send the raw subtitle content with explicit UTF-8 encoding
         res.send(response.body);
         res.end();
     });
