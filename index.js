@@ -106,7 +106,12 @@ app.get('/subtitles.vtt', async (req, res) => {
             return;
         }
         console.log(`Proxying subtitle from: ${url}`);
-        let sub = new sub2vtt(url);
+        // Configure proxy options similar to stremio-opensubtitles-main to improve format detection
+        let proxyOptions = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36",
+            "Referer": "https://api.gestdown.info"
+        };
+        let sub = new sub2vtt(url, { proxy: proxyOptions });
         let file = await sub.getSubtitle();
         if (!file?.subtitle) {
             res.status(500).send('Error converting subtitle');
