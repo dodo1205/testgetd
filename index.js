@@ -94,27 +94,36 @@ app.get('/languages.json', (_, res) => {
     res.end();
 });
 
-// Custom endpoint to proxy and convert subtitles to VTT using sub2vtt, mirroring stremio-opensubtitles-main approach
+// Custom endpoint to proxy and convert subtitles to VTT with proper encoding
 app.get('/subtitles.vtt', async (req, res) => {
     try {
         res.setHeader('Cache-Control', 'max-age=86400,staleRevalidate=stale-while-revalidate, staleError=stale-if-error, public');
-        const { from, proxy } = req.query;
-        if (!from) {
-            res.status(400).send('Missing "from" parameter');
-            return;
+        let subtitleUrl;
+        let proxy = null;
+        if (req?.query?.proxy) {
+            proxy = JSON.parse(Buffer.from(req.query.proxy, 'base64').toString());
+        }
+        if (req?.query?.from) {
+            subtitleUrl = req.query.from;
+        } else {
+            throw new Error('No subtitle URL provided');
+        }
+        
+        console.log(`Proxying subtitle from: ${subtitleUrl}, Proxy:`, proxy);
+        const generated = sub2vtt.gerenateUrl(subtitleUrl, { referer: "someurl" });
+        console.log(`Generated URL:`, generated);
+        const sub = new sub2vtt(subtitleUrl, proxy);
+        const file = await sub.getSubtitle();
+
+        if (!file?.subtitle) {
+            throw new Error(file.status || 'Failed to retrieve subtitle content');
         }
 
-        const proxyConfig = proxy ? JSON.parse(Buffer.from(proxy, 'base64').toString('utf8')) : {};
-        const subRes = await sub2vtt.getSubtitle({
-            url: from,
-            proxy: proxyConfig,
-        });
-
-        res.setHeader('Content-Type', 'text/vtt');
-        res.send(subRes.data);
-    } catch (err) {
-        console.error(err);
-        res.status(500).send(err.message);
+        res.setHeader('Content-Type', 'text/vtt;charset=UTF-8');
+        res.send(file.subtitle);
+    } catch (error) {
+        console.error(`Error fetching subtitle:`, error.message);
+        res.status(500).send('Error fetching subtitle');
     }
 });
 
