@@ -84,10 +84,11 @@ app.get('/:configuration?/:resource/:type/:id/:extra?.json', (req, res) => {
     }
 });
 
-// Custom endpoint to proxy and convert subtitles to VTT with proper encoding
 app.get('/subtitles.vtt', async (req, res) => {
+    console.log('Requête reçue pour /subtitles.vtt avec query:', req.query);
     const subtitleUrl = req.query.from;
     if (!subtitleUrl) {
+        console.log('Erreur: URL de sous-titre manquante dans la requête');
         res.status(400).send('Missing subtitle URL');
         return;
     }
